@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     private string currentAnimation;
 
     public Rigidbody rigidbody;
-    private Animation animation;
+    private Animator animator;
     public GameObject hitObject;
     public LoseWidget loseWidget;
     public AudioSource swipe, punch;
@@ -51,8 +51,7 @@ public class Player : MonoBehaviour
             if (collider.gameObject != this.gameObject && collider.gameObject.name != "Player End")
                 collider.enabled = false;
 
-        animation = GetComponent<Animation>();
-        animation["Roll"].speed = 2;
+        animator = GetComponent<Animator>();
 
         rigidbody = GetComponent<Rigidbody>();
 
@@ -62,7 +61,7 @@ public class Player : MonoBehaviour
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
-                
+
             coins = (int)formatter.Deserialize(stream);
             stream.Close();
         }
@@ -70,7 +69,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (!animation.enabled)
+        if (!animator.enabled)
             return;
 
         transform.Translate(new Vector3(0, 0, Time.deltaTime * speed));
@@ -143,6 +142,8 @@ public class Player : MonoBehaviour
         }
 
         onGround = Physics.Raycast(transform.position, Vector3.down, 0.5f);
+        Debug.Log(onGround);
+
         if ((Input.GetKeyDown(KeyCode.Space) || jump) && onGround)
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, 7, rigidbody.velocity.z);
 
@@ -167,35 +168,21 @@ public class Player : MonoBehaviour
 
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z - 2);
 
-        if (!onGround)
-            ChangeAnimation("Jump");
-
-        if (rolling)
-            ChangeAnimation("Roll");
-
-        if (onGround && !rolling)
-            ChangeAnimation("Run");
-    }
-
-    private void ChangeAnimation(string newAnimation)
-    {
-        if (currentAnimation == newAnimation)
-            return;
-        currentAnimation = newAnimation;
-
-        animation.CrossFade(newAnimation, 0.2f);
+        animator.SetBool("OnGround", onGround);
     }
 
     IEnumerator Roll()
     {
-        rolling = true;
-        yield return new WaitForSeconds(0.3f);
-        rolling = false;
+        animator.SetBool("Rolling", rolling = true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        animator.SetBool("Rolling", rolling = false);
     }
 
     public void Die()
     {
-        if (!animation.enabled || FindObjectOfType<RespawnCapsule>() != null)
+        if (!animator.enabled || FindObjectOfType<RespawnCapsule>() != null)
             return;
 
         swiping = false;
@@ -212,7 +199,7 @@ public class Player : MonoBehaviour
             rotations[i] = rigidbodies[i].transform.rotation;
         }
 
-        animation.enabled = false;
+        animator.enabled = false;
 
         foreach (Rigidbody rigidbody in GetComponentsInChildren<Rigidbody>())
             if (rigidbody.gameObject != gameObject)
@@ -242,7 +229,7 @@ public class Player : MonoBehaviour
             if (collider.gameObject != gameObject && collider.gameObject.name != "Player End")
                 collider.enabled = false;
 
-        animation.enabled = true;
+        animator.enabled = true;
         loseWidget.gameObject.SetActive(false);
 
         transform.position = new Vector3(side * 4.7f, transform.position.y, transform.position.z);

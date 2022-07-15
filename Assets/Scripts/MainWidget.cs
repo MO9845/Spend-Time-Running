@@ -6,17 +6,17 @@ using TMPro;
 
 public class MainWidget : MonoBehaviour
 {
+    public float bonusY;
     public static MainWidget instance;
 
     private Player player;
-
     public TextMeshProUGUI coins;
-    public GameObject bonusesList, bonusWidget;
+    public GameObject bonusList, bonusWidget;
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
         instance = this;
+        player = FindObjectOfType<Player>();
     }
 
     void Update()
@@ -26,6 +26,6 @@ public class MainWidget : MonoBehaviour
 
     public void AddBonus()
     {
-        Instantiate(bonusWidget, bonusesList.transform);
+        Instantiate(bonusWidget, bonusList.transform);
     }
 }

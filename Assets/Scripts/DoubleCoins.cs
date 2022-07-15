@@ -22,7 +22,8 @@ public class DoubleCoins : MonoBehaviour
         if (other.tag == "Player")
             if (GetComponent<Renderer>().enabled)
             {
-                MainWidget.instance.AddBonus(); 
+                MainWidget.instance.bonusY += 10;
+                MainWidget.instance.AddBonus();
 
                 GetComponent<Renderer>().enabled = false;
                 player.coinMultiplier *= 2;
@@ -39,6 +40,8 @@ public class DoubleCoins : MonoBehaviour
         yield return new WaitForSeconds(10);
 
         player.coinMultiplier /= 2;
+        MainWidget.instance.bonusY -= 10;
+
         Destroy(gameObject);
     }
 }
