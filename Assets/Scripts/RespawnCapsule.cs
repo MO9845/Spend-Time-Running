@@ -15,7 +15,7 @@ public class RespawnCapsule : MonoBehaviour
     void Update()
     {
         transform.position = player.transform.position + new Vector3(0, 1, 0);
-        GetComponent<Renderer>().material.color = new Vector4(1, 1, 0, Mathf.Clamp(Mathf.Sin(Time.frameCount * 0.01f), 0, 0.5f));
+        GetComponent<Renderer>().material.color = new Vector4(1, 1, 0, Mathf.Sin(Time.frameCount * 0.03f) / 4.0f + 0.25f);
     }
 
     IEnumerator Disable()

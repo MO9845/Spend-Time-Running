@@ -151,6 +151,9 @@ public class Player : MonoBehaviour
         {
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, -20, rigidbody.velocity.z);
             StartCoroutine(Roll());
+
+            if (!onGround)
+                animator.CrossFade("Roll", 0.2f);
         }
 
         if (swiping)
