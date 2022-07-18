@@ -23,7 +23,7 @@ public class PlayerEnd : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Floor")
+        if (other.gameObject.tag == "Ground")
         {
             floorGenerator.SpawnFloor();
             player.speed = Mathf.Clamp(player.speed * 1.03f, 5, 10);

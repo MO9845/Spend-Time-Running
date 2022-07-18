@@ -41,7 +41,7 @@ public class LoseWidget : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        SceneManager.LoadScene("Main");
     }
 
     public void SaveDistance()
@@ -83,7 +83,7 @@ public class LoseWidget : MonoBehaviour
 
     public void SetCoinsNeededText()
     {
-        coinsNeededText.text = coinsNeeded.ToString();
+        coinsNeededText.text = "0";
         SaveDistance();
     }
 }

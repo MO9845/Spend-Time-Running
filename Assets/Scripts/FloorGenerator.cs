@@ -11,6 +11,9 @@ public class FloorGenerator : MonoBehaviour
 
     void Start()
     {
+        Floor.trucksZ = 0;
+        Floor.lavaZ = 0;
+
         for (int i = 0; i < 10; i++)
             SpawnFloor();
     }

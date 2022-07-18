@@ -5,6 +5,8 @@ using UnityEngine;
 public class StartBonuses : MonoBehaviour
 {
     private Player player;
+    private float currentVelocity;
+
     public GameObject respawnCapsule, boostBonus;
 
     void Start()
@@ -18,9 +20,8 @@ public class StartBonuses : MonoBehaviour
         if (player.coins >= 100)
         {
             Instantiate(respawnCapsule, player.transform.position, Quaternion.identity);
-            boostBonus.SetActive(false);
 
-            player.rigidbody.AddForce(new Vector3(0, 1000, 2000));
+            player.GetComponent<Rigidbody>().AddForce(new Vector3(0, 1000, 2000));
             player.coins -= 100;
         }
     }

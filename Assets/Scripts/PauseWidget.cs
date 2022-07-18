@@ -1,6 +1,7 @@
 //using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseWidget : MonoBehaviour
 {
@@ -20,16 +21,18 @@ public class PauseWidget : MonoBehaviour
             pause = !pause;
 
             if (pause)
-            {
-                pauseWidget.SetActive(true);
-                Time.timeScale = 0;
-            }
+                PauseGame();
             else
-            {
-                pauseWidget.SetActive(false);
-                Time.timeScale = 1;
-            }
+                ResumeGame();
         }
+    }
+
+    public void PauseGame()
+    {
+        pauseWidget.SetActive(true);
+
+        pause = true;
+        Time.timeScale = 0;
     }
 
     public void ResumeGame()
@@ -42,6 +45,13 @@ public class PauseWidget : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Main");
+    }
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+            PauseGame();
     }
 }

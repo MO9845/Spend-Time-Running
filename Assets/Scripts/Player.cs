@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 
     private string currentAnimation;
 
-    public Rigidbody rigidbody;
+    private Rigidbody rigidbody;
     private Animator animator;
     public GameObject hitObject;
     public LoseWidget loseWidget;
@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
     {
         speed = 5;
         coinMultiplier = 1;
+        onGround = true;
 
         foreach (Rigidbody rigidbody in GetComponentsInChildren<Rigidbody>())
             if (rigidbody.gameObject != this.gameObject && rigidbody.gameObject.name != "Player End")
@@ -52,11 +53,9 @@ public class Player : MonoBehaviour
                 collider.enabled = false;
 
         animator = GetComponent<Animator>();
-
         rigidbody = GetComponent<Rigidbody>();
 
         string path = Application.persistentDataPath + "/coins.save";
-
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
@@ -141,9 +140,6 @@ public class Player : MonoBehaviour
             swipe.Play();
         }
 
-        onGround = Physics.Raycast(transform.position, Vector3.down, 0.5f);
-        Debug.Log(onGround);
-
         if ((Input.GetKeyDown(KeyCode.Space) || jump) && onGround)
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, 7, rigidbody.velocity.z);
 
@@ -160,7 +156,11 @@ public class Player : MonoBehaviour
         {
             swipeTime += Time.deltaTime * 10;
 
-            transform.position = new Vector3(Mathf.Lerp(originX, targetX, swipeTime), transform.position.y, transform.position.z);
+            float swipeValue = Mathf.Lerp(originX, targetX, swipeTime);
+            float sz = Mathf.Lerp(0, 0.1f, swipeTime);
+
+
+            transform.position = new Vector3(swipeValue, transform.position.y, transform.position.z + sz);
 
             if (swipeTime >= 1)
             {
@@ -236,5 +236,19 @@ public class Player : MonoBehaviour
         loseWidget.gameObject.SetActive(false);
 
         transform.position = new Vector3(side * 4.7f, transform.position.y, transform.position.z);
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+            if (collision.contacts[0].normal.y > 0)
+                onGround = true;
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+            if (transform.position.y - collision.gameObject.transform.position.y > 0)
+                onGround = false;
     }
 }
