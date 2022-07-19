@@ -71,6 +71,7 @@ public class Player : MonoBehaviour
         if (!animator.enabled)
             return;
 
+        animator.SetBool("OnGround", onGround);
         transform.Translate(new Vector3(0, 0, Time.deltaTime * speed));
 
         if (!swiping && transform.position.x != side * 4.7f)
@@ -140,6 +141,7 @@ public class Player : MonoBehaviour
             swipe.Play();
         }
 
+        onGround = Physics.Raycast(transform.position, Vector3.down, 0.5f);
         if ((Input.GetKeyDown(KeyCode.Space) || jump) && onGround)
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, 7, rigidbody.velocity.z);
 
@@ -157,10 +159,10 @@ public class Player : MonoBehaviour
             swipeTime += Time.deltaTime * 10;
 
             float swipeValue = Mathf.Lerp(originX, targetX, swipeTime);
-            float sz = Mathf.Lerp(0, 0.1f, swipeTime);
+            float swipeZ = Mathf.Lerp(0, 0.1f, swipeTime);
 
 
-            transform.position = new Vector3(swipeValue, transform.position.y, transform.position.z + sz);
+            transform.position = new Vector3(swipeValue, transform.position.y, transform.position.z + swipeZ);
 
             if (swipeTime >= 1)
             {
@@ -170,8 +172,6 @@ public class Player : MonoBehaviour
         }
 
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z - 2);
-
-        animator.SetBool("OnGround", onGround);
     }
 
     IEnumerator Roll()
@@ -236,19 +236,5 @@ public class Player : MonoBehaviour
         loseWidget.gameObject.SetActive(false);
 
         transform.position = new Vector3(side * 4.7f, transform.position.y, transform.position.z);
-    }
-
-    void OnCollisionStay(Collision collision)
-    {
-        if (collision.gameObject.tag == "Ground")
-            if (collision.contacts[0].normal.y > 0)
-                onGround = true;
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.tag == "Ground")
-            if (transform.position.y - collision.gameObject.transform.position.y > 0)
-                onGround = false;
     }
 }

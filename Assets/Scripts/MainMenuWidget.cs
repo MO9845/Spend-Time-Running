@@ -29,6 +29,13 @@ public class MainMenuWidget : MonoBehaviour
 
     public void PlayGame()
     {
+        BinaryFormatter formatter = new BinaryFormatter();
+        string path = Application.persistentDataPath + "/character.save";
+
+        FileStream stream = new FileStream(path, FileMode.Create);
+        formatter.Serialize(stream, characterIndex);
+        stream.Close();
+
         SceneManager.LoadScene("Gameplay");
     }
 
@@ -44,17 +51,8 @@ public class MainMenuWidget : MonoBehaviour
         if (characterIndex < 0)
             characterIndex = 0;
         else
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            string path = Application.persistentDataPath + "/character.save";
-
-            FileStream stream = new FileStream(path, FileMode.Create);
-            formatter.Serialize(stream, characterIndex);
-            stream.Close();
-
             foreach (GameObject character in characters)
                 character.transform.position -= new Vector3(10, 0, 0);
-        }
     }
 
     public void NextCharacter()
@@ -63,16 +61,7 @@ public class MainMenuWidget : MonoBehaviour
         if (characterIndex > 1)
             characterIndex = 1;
         else
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            string path = Application.persistentDataPath + "/character.save";
-
-            FileStream stream = new FileStream(path, FileMode.Create);
-            formatter.Serialize(stream, characterIndex);
-            stream.Close();
-
             foreach (GameObject character in characters)
                 character.transform.position += new Vector3(10, 0, 0);
-        }
     }
 }

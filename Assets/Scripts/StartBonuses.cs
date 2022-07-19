@@ -20,6 +20,7 @@ public class StartBonuses : MonoBehaviour
         if (player.coins >= 100)
         {
             Instantiate(respawnCapsule, player.transform.position, Quaternion.identity);
+            gameObject.SetActive(false);
 
             player.GetComponent<Rigidbody>().AddForce(new Vector3(0, 1000, 2000));
             player.coins -= 100;

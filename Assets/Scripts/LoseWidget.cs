@@ -83,7 +83,7 @@ public class LoseWidget : MonoBehaviour
 
     public void SetCoinsNeededText()
     {
-        coinsNeededText.text = "0";
+        coinsNeededText.text = coinsNeeded.ToString();
         SaveDistance();
     }
 }
